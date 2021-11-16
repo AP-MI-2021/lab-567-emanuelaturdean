@@ -1,0 +1,2 @@
+python main.py add,1,Emma,economy,3,True
+python main.py showall

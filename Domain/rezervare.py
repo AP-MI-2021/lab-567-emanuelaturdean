@@ -8,7 +8,7 @@ def createRezervare(id, nume, clasa, pret, checkinfacut):
     }
 
 def getId(rezervare):
-    return rezervare['nume']
+    return rezervare['id']
 
 def getNume(rezervare):
     return rezervare['nume']

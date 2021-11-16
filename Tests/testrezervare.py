@@ -14,3 +14,4 @@ def testrezervari():
     assert (Domain.rezervare.getCheckinfacut(rez) == True)
 
 
+
