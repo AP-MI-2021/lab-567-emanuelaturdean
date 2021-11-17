@@ -26,7 +26,7 @@ def testieftinesterezervaricuprocentaj():
 
 def testpretmaximfiecarezbor():
     rezervari = []
-    Logic.crud.adaugaRezervare(rezervari, 1, "Deni", "economy", 100, True)
+    Logic.crud.adaugaRezervare(rezervari, 1, "Alex", "economy", 100, True)
     Logic.crud.adaugaRezervare(rezervari, 2, "Emma", "bussiness", 13, False)
     Logic.crud.adaugaRezervare(rezervari, 3, "Emma", "economy", 50, True)
     Logic.crud.adaugaRezervare(rezervari, 4, "Emma", "economy plus", 65, True)
