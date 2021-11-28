@@ -1,5 +1,5 @@
 import Domain.rezervare
-
+import itertools
 def treceRezervariLaClasaSuperioaraPentruNumeCitit(rezervari, nume):
     for rez in rezervari:
         if Domain.rezervare.getNume(rez) == nume:
@@ -25,3 +25,16 @@ def pretMaximFiecareClasa(rezervari):
         if Domain.rezervare.getClasa(rez) == "bussiness" and Domain.rezervare.getPret(rez) > pretMaxBussiness:
             pretMaxBussiness = Domain.rezervare.getPret(rez)
     return pretMaxEconomy, pretMaxEconomyPlus, pretMaxBussiness
+
+def Ordonarerezervaridescrescatordupapret(rezervari):
+    copierezervari = rezervari
+    copierezervari.sort(key =  lambda rezervare : rezervare['pret'])
+    return copierezervari
+
+def afisaresumepreturiptfiecarenume(rezervari):
+    key_func = lambda rezervare: rezervare["nume"]
+    for key, lista in itertools.groupby(rezervari, key_func):
+        rezervariPerPersoana = list(lista)
+        listaPreturi = list(map( lambda rezervare: rezervare['pret'],rezervariPerPersoana))
+        print(key + " :" + str(sum(listaPreturi)))
+

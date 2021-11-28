@@ -20,7 +20,7 @@ def mainNormal():
     UserInterface.Meniu.afiseaza()
     rezervari = []
     n = 0
-    Logic.crud.adaugaRezervare(rezervari, 1, "Alex", "economy", 100, True)
+    Logic.crud.adaugaRezervare(rezervari, 1, "Deni", "economy", 100, True)
     Logic.crud.adaugaRezervare(rezervari, 2, "Emma", "bussiness", 13, False)
     Logic.crud.adaugaRezervare(rezervari, 3, "Emma", "economy", 50, True)
     try:
@@ -63,6 +63,11 @@ def mainNormal():
             print("Pret max economy plus:", pmaxeconomyplus)
             print("Pret max bussiness:", pmaxbussiness)
         elif n == 7:
+            rezervarisortate = Logic.functionalitati.Ordonarerezervaridescrescatordupapret(rezervari)
+            printRezervari(rezervarisortate)
+        elif n==8:
+            Logic.functionalitati.afisaresumepreturiptfiecarenume(rezervari)
+        elif n == 9:
             Tests.testfunctionalitati.testupgraderezervarepentrunume()
             Tests.testrezervare.testrezervari()
             Tests.testfunctionalitati.testieftinesterezervaricuprocentaj()
