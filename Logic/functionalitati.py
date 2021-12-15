@@ -1,40 +1,70 @@
-import Domain.rezervare
+from Domain.rezervare import *
+from Domain.agentie import *
+from Logic.crud import *
+
 import itertools
-def treceRezervariLaClasaSuperioaraPentruNumeCitit(rezervari, nume):
+def treceRezervariLaClasaSuperioaraPentruNumeCitit(agentie, nume):
+    rezervari = get_list_curenta(agentie)
     for rez in rezervari:
-        if Domain.rezervare.getNume(rez) == nume:
-            if Domain.rezervare.getClasa(rez) == "economy":
-                Domain.rezervare.setClasa(rez, "economy plus")
-            elif Domain.rezervare.getClasa(rez) == "economy plus":
-                Domain.rezervare.setClasa(rez, "bussiness")
+        if getNume(rez) == nume:
+            if getClasa(rez) == "economy":
+                modificaRezervare(agentie, rez, getId(rez), getNume(rez), "economy plus", getPret(rez), getCheckinfacut(rez))
+            elif getClasa(rez) == "economy plus":
+                modificaRezervare(agentie, rez, getId(rez), getNume(rez), "business", getPret(rez), getCheckinfacut(rez))
 
-def ieftinesteRezervariCuCheckinFacut(rezervari, procentaj):
+def ieftinesteRezervariCuCheckinFacut(agentie, procentaj):
+    rezervari = get_list_curenta(agentie)
     for rez in rezervari:
-        if Domain.rezervare.getCheckinfacut(rez) == True:
-            Domain.rezervare.setPret(rez, Domain.rezervare.getPret(rez) - procentaj/100 * Domain.rezervare.getPret(rez))
+        if getCheckinfacut(rez) == True:
+            modificaRezervare(agentie, rez, getId(rez), getNume(rez), getClasa(rez), getPret(rez) - procentaj/100 * getPret(rez), getCheckinfacut(rez))
 
-def pretMaximFiecareClasa(rezervari):
+
+def pretMaximFiecareClasa(agentie):
+    rezervari = get_list_curenta(agentie)
     pretMaxEconomy = 0
     pretMaxEconomyPlus = 0
     pretMaxBussiness = 0
     for rez in rezervari:
-        if Domain.rezervare.getClasa(rez) == "economy" and Domain.rezervare.getPret(rez) > pretMaxEconomy:
-            pretMaxEconomy = Domain.rezervare.getPret(rez)
-        if Domain.rezervare.getClasa(rez) == "economy plus" and Domain.rezervare.getPret(rez) > pretMaxEconomyPlus:
-            pretMaxEconomyPlus = Domain.rezervare.getPret(rez)
-        if Domain.rezervare.getClasa(rez) == "bussiness" and Domain.rezervare.getPret(rez) > pretMaxBussiness:
-            pretMaxBussiness = Domain.rezervare.getPret(rez)
+        if getClasa(rez) == "economy" and getPret(rez) > pretMaxEconomy:
+            pretMaxEconomy = getPret(rez)
+        if getClasa(rez) == "economy plus" and getPret(rez) > pretMaxEconomyPlus:
+            pretMaxEconomyPlus = getPret(rez)
+        if getClasa(rez) == "bussiness" and getPret(rez) > pretMaxBussiness:
+            pretMaxBussiness = getPret(rez)
     return pretMaxEconomy, pretMaxEconomyPlus, pretMaxBussiness
 
-def Ordonarerezervaridescrescatordupapret(rezervari):
+def Ordonarerezervaridescrescatordupapret(agentie):
+    rezervari = get_list_curenta(agentie)
     copierezervari = rezervari
     copierezervari.sort(key =  lambda rezervare : rezervare['pret'])
     return copierezervari
 
-def afisaresumepreturiptfiecarenume(rezervari):
+def afisaresumepreturiptfiecarenume(agentie):
+    rezervari = get_list_curenta(agentie)
     key_func = lambda rezervare: rezervare["nume"]
     for key, lista in itertools.groupby(rezervari, key_func):
         rezervariPerPersoana = list(lista)
         listaPreturi = list(map( lambda rezervare: rezervare['pret'],rezervariPerPersoana))
         print(key + " :" + str(sum(listaPreturi)))
+
+def undo(agentie):
+    lista_curenta = get_list_curenta(agentie)
+    lista_undo = get_list_undo(agentie)
+    if len(lista_undo) > 1:
+        new_lista_curenta = lista_undo.pop()
+        adaugare_lista_redo(agentie)
+        set_lista_curenta(agentie, new_lista_curenta)
+    else:
+        raise Exception("No undo to do!")
+
+def redo(agentie):
+    lista_curenta = get_list_curenta(agentie)
+    lista_redo = get_list_redo(agentie)
+    if len(lista_redo) > 1:
+        new_lista_curenta = lista_redo.pop()
+        adaugare_lista_undo(agentie)
+        set_lista_curenta(agentie, new_lista_curenta)
+    else:
+        raise Exception("No redo to do!")
+
 

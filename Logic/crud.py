@@ -1,19 +1,29 @@
-import Domain.rezervare
+from Domain.rezervare import *
+from Domain.agentie import *
 
-def adaugaRezervare(rezervari, id, nume, clasa, pret, checkinfacut):
-    rez = Domain.rezervare.createRezervare(id, nume, clasa, pret, checkinfacut)
+def adaugaRezervare(agentie, id, nume, clasa, pret, checkinfacut):
+    rezervari = get_list_curenta(agentie)
+    rez = createRezervare(id, nume, clasa, pret, checkinfacut)
+    adaugare_lista_undo(agentie)
+    goleste_list_redo(agentie)
     rezervari.append(rez)
 
-def stergeRezervare(rezervari, id, nume):
+def stergeRezervare(agentie, id, nume):
+    rezervari = get_list_curenta(agentie)
     for rez in rezervari:
-        if Domain.rezervare.getId(rez) == id and Domain.rezervare.getNume(rez) == nume:
+        if getId(rez) == id and getNume(rez) == nume:
+            adaugare_lista_undo(agentie)
+            goleste_list_redo(agentie)
             rezervari.remove(rez)
 
-def modificaRezervare(rezervari, rezervare, idnou, numenou, clasanoua, pretnou, checkinfacutnou):
+def modificaRezervare(agentie, rezervare, idnou, numenou, clasanoua, pretnou, checkinfacutnou):
+    rezervari = get_list_curenta(agentie)
     for rez in rezervari:
         if rez == rezervare:
-            Domain.rezervare.setId(rezervare, idnou)
-            Domain.rezervare.setNume(rezervare, numenou)
-            Domain.rezervare.setClasa(rezervare, clasanoua)
-            Domain.rezervare.setPret(rezervare, pretnou)
-            Domain.rezervare.setCheckinfacut(rezervare, checkinfacutnou)
+            adaugare_lista_undo(agentie)
+            goleste_list_redo(agentie)
+            setId(rezervare, idnou)
+            setNume(rezervare, numenou)
+            setClasa(rezervare, clasanoua)
+            setPret(rezervare, pretnou)
+            setCheckinfacut(rezervare, checkinfacutnou)

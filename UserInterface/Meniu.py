@@ -8,4 +8,4 @@ def afiseaza():
           '\n' +"6. Pret maxim fiecare tip de zbor"
             + '\n' + "7. Ordonare rezervari dupa pret" +
     '\n' + "8.Afisarea sumelor preturilor pentru fiecare nume"
-          '\n' + "9. Teste"+ '\n')
+          '\n' + "9.Undo" +'\n' + "10.Redo" + '\n' + "11. Teste"+ '\n')

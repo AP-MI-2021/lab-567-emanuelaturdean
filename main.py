@@ -1,28 +1,29 @@
-import Logic.crud
-import Logic.functionalitati
-import Tests.testfunctionalitati
-import Tests.testrezervare
-import UserInterface.Meniu
-import Domain.rezervare
+from Logic.crud import *
+from Logic.functionalitati import *
+from Tests.testfunctionalitati import *
+from Tests.testrezervare import *
+from UserInterface.Meniu import *
+from Domain.rezervare import *
 import sys
 
-def printRezervari(rezervari):
+def printRezervari(agentie):
+    rezervari = get_list_curenta(agentie)
     for rez in rezervari:
         print("--")
-        print(Domain.rezervare.getId(rez))
-        print(Domain.rezervare.getNume(rez))
-        print(Domain.rezervare.getClasa(rez))
-        print(Domain.rezervare.getPret(rez))
-        print(Domain.rezervare.getCheckinfacut(rez))
+        print(getId(rez))
+        print(getNume(rez))
+        print(getClasa(rez))
+        print(getPret(rez))
+        print(getCheckinfacut(rez))
         print("--")
 
 def mainNormal():
-    UserInterface.Meniu.afiseaza()
-    rezervari = []
+    afiseaza()
+    agentie = create_agentie()
     n = 0
-    Logic.crud.adaugaRezervare(rezervari, 1, "Deni", "economy", 100, True)
-    Logic.crud.adaugaRezervare(rezervari, 2, "Emma", "bussiness", 13, False)
-    Logic.crud.adaugaRezervare(rezervari, 3, "Emma", "economy", 50, True)
+    adaugaRezervare(agentie, 1, "Deni", "economy", 100, True)
+    adaugaRezervare(agentie, 2, "Emma", "bussiness", 13, False)
+    adaugaRezervare(agentie, 3, "Emma", "economy", 50, True)
     try:
         n = int(input("Alege optiune:"))
     except ValueError:
@@ -36,45 +37,55 @@ def mainNormal():
                 clasa = input("Clasa:")
                 pret = int(input("Pret:"))
                 checkinfacut = bool(int(input("Checkin facut:")))
-                Logic.crud.adaugaRezervare(rezervari, id, nume, clasa, pret, checkinfacut)
+                adaugaRezervare(agentie, id, nume, clasa, pret, checkinfacut)
             except (ValueError):
                 print("eroare")
         elif n == 2:
             try:
                 id = int(input("Id:"))
                 nume = input("Nume:")
-                Logic.crud.stergeRezervare(rezervari, id, nume)
+                stergeRezervare(agentie, id, nume)
             except (ValueError):
                 print("eroare")
         elif n == 3:
-            printRezervari(rezervari)
+            printRezervari(agentie)
         elif n == 4:
             nume = input("Nume rezervare:")
-            Logic.functionalitati.treceRezervariLaClasaSuperioaraPentruNumeCitit(rezervari, nume)
+            treceRezervariLaClasaSuperioaraPentruNumeCitit(agentie, nume)
         elif n == 5:
             try:
                 procentaj = int(input("Procentaj:"))
-                Logic.functionalitati.ieftinesteRezervariCuCheckinFacut(rezervari, procentaj)
+                ieftinesteRezervariCuCheckinFacut(agentie, procentaj)
             except ValueError:
                 print("Eroare")
         elif n == 6:
-            pmaxeconomy, pmaxeconomyplus, pmaxbussiness = Logic.functionalitati.pretMaximFiecareClasa(rezervari)
+            pmaxeconomy, pmaxeconomyplus, pmaxbussiness = pretMaximFiecareClasa(agentie)
             print("Pret max economy:", pmaxeconomy)
             print("Pret max economy plus:", pmaxeconomyplus)
             print("Pret max bussiness:", pmaxbussiness)
         elif n == 7:
-            rezervarisortate = Logic.functionalitati.Ordonarerezervaridescrescatordupapret(rezervari)
-            printRezervari(rezervarisortate)
+            agentiesortate = Ordonarerezervaridescrescatordupapret(agentie)
+            printRezervari(agentiesortate)
         elif n==8:
-            Logic.functionalitati.afisaresumepreturiptfiecarenume(rezervari)
+            afisaresumepreturiptfiecarenume(agentie)
         elif n == 9:
-            Tests.testfunctionalitati.testupgraderezervarepentrunume()
-            Tests.testrezervare.testrezervari()
-            Tests.testfunctionalitati.testieftinesterezervaricuprocentaj()
-            Tests.testfunctionalitati.testpretmaximfiecarezbor()
+            try:
+                undo(agentie)
+            except Exception as exception:
+                print(exception)
+        elif n == 10:
+            try:
+                redo(agentie)
+            except Exception as exception:
+                print(exception)
+        elif n == 11:
+            testupgraderezervarepentrunume()
+            testrezervari()
+            testieftinesterezervaricuprocentaj()
+            testpretmaximfiecarezbor()
         else:
             print("Incorect")
-        UserInterface.Meniu.afiseaza()
+        afiseaza()
         try:
             n = int(input("Alege optiune:"))
         except ValueError:
@@ -82,21 +93,21 @@ def mainNormal():
             n = int(input("Alege optiune:"))
 
 def mainLinieComanda():
-    rezervari = []
+    agentie = []
     n = 0
-    Logic.crud.adaugaRezervare(rezervari, 1, "Alex", "economy", 100, True)
-    Logic.crud.adaugaRezervare(rezervari, 2, "Emma", "bussiness", 13, False)
-    Logic.crud.adaugaRezervare(rezervari, 3, "Emma", "economy", 50, True)
+    adaugaRezervare(agentie, 1, "Alex", "economy", 100, True)
+    adaugaRezervare(agentie, 2, "Emma", "bussiness", 13, False)
+    adaugaRezervare(agentie, 3, "Emma", "economy", 50, True)
     argument = sys.argv[1]
     arguments = argument.split(',')
     if arguments[0] == "add":
         if len(arguments) != 6:
             print("eroare")
         else:
-            Logic.crud.adaugaRezervare(rezervari, arguments[1], arguments[2], arguments[3], arguments[4], arguments[5])
-        printRezervari(rezervari)
+            adaugaRezervare(agentie, arguments[1], arguments[2], arguments[3], arguments[4], arguments[5])
+        printRezervari(agentie)
     elif arguments[0] == "showall":
-        printRezervari(rezervari)
+        printRezervari(agentie)
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
